@@ -1,17 +1,22 @@
 // Select the node that will be observed for mutations
-const targetNode = getRootNode();
+let targetNode = getRootNode();
 
 // Options for the observer (which mutations to observe)
 const config = { attributes: true, childList: true, subtree: true };
 
-// Callback function to execute when mutations are observed
+/**
+ * Callback function to execute when mutations are observed
+ * 
+ * @param {MutationRecord[]} mutationList
+ * @param {MutationObserver} observerHandle
+ */
 const callback = (mutationList, observerHandle) => {
     // disconnect so that we don't trigger re-render
     observerHandle.disconnect();
-    for (const mutation of mutationList) {
-        if (["childList"].includes(mutation.type)) {
-            process(targetNode)
-        }
+    const oldTargetNode = targetNode;
+    targetNode = process(targetNode);
+    if (targetNode == null) {
+        targetNode = oldTargetNode
     }
     // continue observing
     observerHandle.observe(targetNode, config);

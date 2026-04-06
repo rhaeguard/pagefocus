@@ -1,5 +1,13 @@
 function getRootNode() {
-    return document.body
+    const iframe = document.querySelector(`iframe[data-testid="interop-iframe"]`);
+    if (iframe != null) {
+        return iframe.contentDocument
+    }
+    const vfeed = document.getElementById("voyager-feed")
+    if (vfeed != null) {
+        return vfeed
+    }
+    return document.getElementById("root")
 }
 
 function process(root) {
@@ -27,4 +35,6 @@ function process(root) {
             }
         }
     } catch(err) {}
+
+    return getRootNode()
 }
